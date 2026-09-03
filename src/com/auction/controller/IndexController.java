@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import jakarta.xml.bind.JAXBException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.auction.model.Auction;
 import com.auction.model.Player;
+import com.auction.model.Team;
 import com.auction.service.AuctionService;
 import com.auction.util.AuctionUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,6 +37,9 @@ public class IndexController
 	public static Auction session_current_bid;
 	public static String session_selected_broadcaster;
 	public static boolean is_this_updating = false;
+	List<Team> session_team = new ArrayList<Team>();
+	List<Player> session_player = new ArrayList<Player>();
+	
 	String teamName = "";
 	int rtmUsed = 0;
 	
@@ -71,7 +77,7 @@ public class IndexController
 		}
 	}
 	
-	@RequestMapping(value = {"/processAuctionProcedures"}, method={RequestMethod.GET,RequestMethod.POST})    
+	@RequestMapping(value = {"/processAuctionProcedures.html"}, method={RequestMethod.GET,RequestMethod.POST})    
 	public @ResponseBody String processAuctionProcedures(
 			@RequestParam(value = "whatToProcess", required = false, defaultValue = "") String whatToProcess,
 			@RequestParam(value = "valueToProcess", required = false, defaultValue = "") String valueToProcess)
@@ -82,7 +88,7 @@ public class IndexController
 		    Auction auctionData = new ObjectMapper().readValue(new File(AuctionUtil.AUCTION_DIRECTORY + AuctionUtil.AUCTION_JSON), Auction.class);
 		    Auction currentBidData = new ObjectMapper().readValue(new File(AuctionUtil.AUCTION_DIRECTORY + AuctionUtil.CURRENT_BID_JSON), Auction.class);
 		    
-		    auctionData = AuctionFunctions.populateMatchVariables(auctionService, auctionData);
+		    auctionData = AuctionFunctions.populateMatchVariables(session_auction, session_player, session_team);
 		    auctionData.setTeamZoneList(AuctionFunctions.PlayerCountPerTeamZoneWise(auctionData.getTeam(),
 		    		auctionData.getPlayers(), auctionData.getPlayersList(),session_selected_broadcaster));
 		    teamName = "NO";
