@@ -202,26 +202,57 @@ function addItemsToList(whatToProcess, dataToProcess)
 		     <span style="font-size: 150px;">${currentDisplay}</span>`
 		).css({'grid-column': '1 / -1'});
 		
-		let increment = (currentAmount < 500000) ? 25000 : 50000;
-		let nextBidDisplay = formatToLakh(currentAmount + increment);
+		/*let increment = (currentAmount < 500000) ? 25000 : 50000;
+		let nextBidDisplay = formatToLakh(currentAmount + increment);*/
+		
+		let category = (currentPlayer.category || '').toUpperCase();
+		let increment;
+		let maxBid;
+		let nextBidDisplay;
+		if (category === 'ACE' || category === 'DARKHORSE') {
+		    nextBidDisplay = '-';
+		} else {
+		    if (category === 'ELITE') {
+		        increment = (currentAmount < 1200000) ? 50000 : 25000;
+		        maxBid = 1600000;
+		    } else if (category === 'PRO') {
+		        increment = 25000;
+		        maxBid = 1000000;
+		    } else if (category === 'ROOKIE') {
+		        increment = 20000;
+		        maxBid = null;
+		    } else {
+		        increment = (currentAmount < 500000) ? 25000 : 50000;
+		        maxBid = null;
+		    }
+		    if (maxBid !== null && currentAmount >= maxBid) {
+		        nextBidDisplay = 'MAX BID REACHED';
+		    } else {
+		        let nextAmount = currentAmount + increment;
+		        if (maxBid !== null && nextAmount > maxBid) {
+		            nextAmount = maxBid;
+		        }
+		        nextBidDisplay = formatToLakh(nextAmount);
+		    }
+		}
 		
 		let nextBid = $('<div>').html(
 		    `<span style="font-size: 50px; color:#fff;">NEXT BID:</span><br>
 		     <span style="font-size: 120px;">${nextBidDisplay}</span>`
 		).css({
-		    'text-align': 'left',
-		    'padding-left': '40px'
+			'text-align': 'center',
+			    'grid-column': '1 / -1'
 		});
 		
-		let rtmDiv = $('<div>').html(
+		/*let rtmDiv = $('<div>').html(
 		            `<span style="font-size: 40px;">RTM: </span><br>
 		             <span style="font-size: 60px;">${TeamName}</span>`
 		        ).css({
 		    'text-align': 'right',
 		    'padding-right': '40px',
 		    'color': '#00ffcc'
-		});
-		divElement.append(playerInfo, currentBid, nextBid, rtmDiv);
+		});*/
+		divElement.append(playerInfo, currentBid, nextBid/*, rtmDiv*/);
 		$('#auction_div').append(divElement);
 		
 		break;

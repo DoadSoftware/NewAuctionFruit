@@ -6,7 +6,7 @@
 <head>
   <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1">
   <title>Initialise Screen</title>
-	<script src="<c:url value='/webjars/jquery/3.7.1/dist/jquery.min.js'/>"></script>
+	<script src="<c:url value='/webjars/jquery/3.7.1/jquery.min.js'/>"></script>
 	<script src="<c:url value='/webjars/bootstrap/5.3.8/js/bootstrap.bundle.min.js'/>"></script>
 	<script src="<c:url value='/resources/javascript/index.js'/>"></script>
 	<link rel="stylesheet" href="<c:url value='/webjars/bootstrap/5.3.8/css/bootstrap.min.css'/>"/>
@@ -30,7 +30,7 @@
 			    <div class="col-sm-6 col-md-6">
 			      <select id="selectedBroadcaster" name="selectedBroadcaster" class="browser-default custom-select custom-select-sm" 
 			      		onchange="processUserSelection(this)">
-			          <option value="HANDBALL">MT20</option>
+			          <option value="HANDBALL">VCL</option>
 			      </select>
 			    </div>
 			  </div>
