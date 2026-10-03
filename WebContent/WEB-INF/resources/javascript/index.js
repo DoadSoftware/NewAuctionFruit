@@ -180,8 +180,52 @@ function processAuctionProcedures(whatToProcess, whichInput)
 function addItemsToList(whatToProcess, dataToProcess)
 {	
 	switch (whatToProcess) {
-	
-	case 'SHOW_BID':
+		case 'SHOW_BID':
+			$('#auction_div').empty();
+			if (!currentPlayer) return;
+			let divElement = $('<div>').attr('id', 'custom-div').css({ 'display': 'grid', 'grid-template-columns': '1fr 1fr',});
+
+			let currentAmount = Number(currentPlayer.soldForPoints) || 0;
+			let currentDisplay = formatToUSD(currentAmount);
+			let playerInfo = $('<h2>').html(
+			    `<span style="font-size: 60px; font-weight: 900; color: rgb(255,153,51);">
+			        ${currentPlayer.playerNumber}
+			     </span><br>${currentPlayer.full_name}`
+			).css({'grid-column': '1 / -1'});
+			let currentBid = $('<h1>').html(
+			    `<span style="font-size: 60px;">CURRENT BID: </span>
+			     <span style="font-size: 150px;">${currentDisplay}</span>`
+			).css({'grid-column': '1 / -1'});
+
+			// =====================================================
+			// ILT20 NEXT BID CALCULATION (Season 5 Auction Guidelines)
+			// $10,000 - $50,000  -> +$2,000
+			// $50,000 - $100,000 -> +$5,000
+			// $100,000 and above -> +$10,000
+			// =====================================================
+			let nextBidDisplay;
+
+			if (currentAmount <= 0) {
+			    nextBidDisplay = '-';
+			} else if (currentAmount < 50000) {
+			    nextBidDisplay = formatToUSD(currentAmount + 2000);
+			} else if (currentAmount < 100000) {
+			    nextBidDisplay = formatToUSD(currentAmount + 5000);
+			} else {
+			    nextBidDisplay = formatToUSD(currentAmount + 10000);
+			}
+
+			let nextBid = $('<div>').html(
+			    `<span style="font-size: 50px; color:#fff;">NEXT BID:</span><br>
+			     <span style="font-size: 120px;">${nextBidDisplay}</span>`
+			).css({
+				'text-align': 'center',
+				'grid-column': '1 / -1'
+			});
+			divElement.append(playerInfo, currentBid, nextBid);
+			$('#auction_div').append(divElement);
+			break;
+	/*case 'SHOW_BID':
 		$('#auction_div').empty();
 		if (!currentPlayer) return;
 		let divElement = $('<div>').attr('id', 'custom-div').css({
@@ -202,10 +246,10 @@ function addItemsToList(whatToProcess, dataToProcess)
 		     <span style="font-size: 150px;">${currentDisplay}</span>`
 		).css({'grid-column': '1 / -1'});
 		
-		/*let increment = (currentAmount < 500000) ? 25000 : 50000;
-		let nextBidDisplay = formatToLakh(currentAmount + increment);*/
+		let increment = (currentAmount < 500000) ? 25000 : 50000;
+		let nextBidDisplay = formatToLakh(currentAmount + increment);
 		
-		let category = (currentPlayer.category || '').toUpperCase();
+		let category = (currentPlayer.members || '').toUpperCase();
 		let increment;
 		let maxBid;
 		let nextBidDisplay;
@@ -244,18 +288,18 @@ function addItemsToList(whatToProcess, dataToProcess)
 			    'grid-column': '1 / -1'
 		});
 		
-		/*let rtmDiv = $('<div>').html(
+		let rtmDiv = $('<div>').html(
 		            `<span style="font-size: 40px;">RTM: </span><br>
 		             <span style="font-size: 60px;">${TeamName}</span>`
 		        ).css({
 		    'text-align': 'right',
 		    'padding-right': '40px',
 		    'color': '#00ffcc'
-		});*/
-		divElement.append(playerInfo, currentBid, nextBid/*, rtmDiv*/);
+		});
+		divElement.append(playerInfo, currentBid, nextBid, rtmDiv);
 		$('#auction_div').append(divElement);
 		
-		break;
+		break;*/
 	/*case 'SHOW_BID':
 		$('#auction_div').empty();
 
@@ -324,7 +368,33 @@ function checkEmpty(inputBox,textToShow) {
 	return true;	
 }	
 
+function ConvertToLakh(num) {
+
+    if (num === null || num === undefined || isNaN(num)) {
+        return "$0K";
+    }
+
+    let value = Number(num) / 1000;
+
+    // Remove unnecessary trailing zeros
+    let formatted = value.toFixed(2).replace(/\.?0+$/, "");
+
+    return "$" + formatted + "K";
+}
 function formatToLakh(amount) {
     let value = amount / 100000; // convert to lakh
     return (value % 1 === 0) ? value + 'L' : value.toFixed(2) + 'L';
+}
+function formatToUSD(num) {
+
+    if (num === null || num === undefined || isNaN(num)) {
+        return "$0K";
+    }
+
+    let value = Number(num) / 1000;
+
+    // Remove unnecessary trailing zeros
+    let formatted = value.toFixed(2).replace(/\.?0+$/, "");
+
+    return "$" + formatted + "K";
 }

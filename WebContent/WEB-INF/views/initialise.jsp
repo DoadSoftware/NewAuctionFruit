@@ -30,7 +30,7 @@
 			    <div class="col-sm-6 col-md-6">
 			      <select id="selectedBroadcaster" name="selectedBroadcaster" class="browser-default custom-select custom-select-sm" 
 			      		onchange="processUserSelection(this)">
-			          <option value="HANDBALL">VCL</option>
+			          <option value="HANDBALL">ILT20</option>
 			      </select>
 			    </div>
 			  </div>
